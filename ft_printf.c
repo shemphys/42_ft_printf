@@ -12,18 +12,18 @@
 
 #include "ft_printf.h"
 
-void	ft_putchar(char c)
+/*void	ft_putchar(char c)
 {
 	write(1, &c, 1);
-}
+}*/
 
-void	ft_putstr(char *str)
+/*void	ft_putstr(char *str)
 {
 	while (*str)
 		ft_putchar(*str++);
-}
+}*/
 
-void	ft_putnbr(int n)
+/*void	ft_putnbr(int n)
 {
 	if (n == -2147483648)
 		ft_putstr("-2147483648");
@@ -39,9 +39,9 @@ void	ft_putnbr(int n)
 	}
 	else
 		ft_putchar(n + '0');
-}
+}*/
 
-void	ft_putnbr_u(unsigned int n)
+/*void	ft_putnbr_u(unsigned int n)
 {
 	if (n > 9)
 	{
@@ -50,9 +50,9 @@ void	ft_putnbr_u(unsigned int n)
 	}
 	else
 		ft_putchar(n + '0');
-}
+}*/
 
-void	ft_puthex(unsigned int n, char *base)
+/*void	ft_puthex(unsigned int n, char *base)
 {
 	if (n > 15)
 	{
@@ -61,75 +61,28 @@ void	ft_puthex(unsigned int n, char *base)
 	}
 	else
 		ft_putchar(base[n]);
-}
+}*/
 
-void	ft_putstr_p(void *p)
+/*void	ft_putstr_p(void *p)
 {
 	ft_putstr("0x");
 	ft_puthex((unsigned long)p, "0123456789abcdef");
-}
+}*/
 
-void	ft_putnbr_space(int n)
+/*void	ft_putnbr_space(int n)
 {
 	if (n >= 0)
 		ft_putchar(' ');
 	ft_putnbr(n);
-}
-/*
-void	ft_printf(const char *format, ...)
-{
-	va_list	args;
-	int		i;
+}*/
 
-	va_start(args, format);
-	i = 0;
-	while (format[i])
-	{
-		if (format[i] == '%')
-		{
-			i++;
-			if (format[i] == ' ')
-			{
-				i++;
-				if (format[i] == 'd' || format[i] == 'i')
-					ft_putnbr_space(va_arg(args, int));
-			}
-			else if (format[i] == 'c')
-				ft_putchar(va_arg(args, int));
-			else if (format[i] == 's')
-				ft_putstr(va_arg(args, char *));
-			else if (format[i] == 'd' || format[i] == 'i')
-				ft_putnbr(va_arg(args, int));
-			else if (format[i] == 'u')
-				ft_putnbr_u(va_arg(args, unsigned int));
-			else if (format[i] == 'x')
-				ft_puthex(va_arg(args, unsigned int), "0123456789abcdef");
-			else if (format[i] == 'X')
-				ft_puthex(va_arg(args, unsigned int), "0123456789ABCDEF");
-			else if (format[i] == 'p')
-				ft_putstr_p(va_arg(args, void *));
-			else if (format[i] == '%')
-				ft_putchar('%');
-			else
-				ft_putchar(format[i]);
-		}
-		else
-			ft_putchar(format[i]);
-		i++;
-	}
-	va_end(args);
-}
-
-#include "ft_printf.h"
-#include <stdarg.h>
-#include <unistd.h>
-*/
-static void	print_argument(char format, va_list ap)
+void	print_argument(char format, va_list ap)
 {
 	int d;
-	char c, *s;
-	void *p;
-	unsigned int u;
+	char c; 
+	//char *s;
+	//void *p;
+	//unsigned int u;
 
 	if (format == ' ')
 	{
@@ -150,7 +103,7 @@ static void	print_argument(char format, va_list ap)
 		print_argument_ext(format, ap);
 }
 
-static void	print_argument_ext(char format, va_list ap)
+void	print_argument_ext(char format, va_list ap)
 {
 	char *s;
 	void *p;
@@ -175,7 +128,7 @@ static void	print_argument_ext(char format, va_list ap)
 		print_argument_hex(format, ap);
 }
 
-static void	print_argument_hex(char format, va_list ap)
+void	print_argument_hex(char format, va_list ap)
 {
 	unsigned int u;
 
@@ -206,26 +159,3 @@ void	ft_printf(const char *format, ...)
 	}
 	va_end(ap);
 }
-
-/*
-int	ft_printf(char const *str, ...)
-{
-	va_list archivo;
-	int		x;
-
-	x = 0;
-	
-	va_start(archivo, str);
-
-	while (!str)
-	{
-		if (str == '%' && !(str++ == 'c' || str++ == 's' || str++ == 'p' 
-		|| str++ == 'i' || str++ == 'd' || str++ == 'u' || str++ == 'x' 
-		|| str++ == 'X' || str++ == '%'))
-			ft_error()
-			ft_menu(str++);
-		str++;
-	}
-	return (1);
-}
-*/

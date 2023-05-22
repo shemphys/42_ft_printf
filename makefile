@@ -12,7 +12,14 @@
 
 NAME = libftprintf.a
 
-SRCS = ft_printf.c main.c
+SRCS = ft_printf.c \
+		ft_putchar.c \
+		ft_putstr.c \
+		ft_putnbr.c \
+		ft_putnbr_u.c \
+		ft_puthex.c \
+		ft_putstr_p.c \
+		ft_putnbr_space.c
 
 OBJS = $(SRCS:.c=.o)
 
