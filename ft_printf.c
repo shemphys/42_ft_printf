@@ -1,94 +1,114 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   ft_printf.c                                        :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: mparedes <marvin@42.fr>                    +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/03/24 07:55:50 by mparedes          #+#    #+#             */
-/*   Updated: 2023/03/24 07:55:53 by mparedes         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
+# include <stdarg.h>
+# include <unistd.h>
 
-#include "ft_printf.h"
-
-void	print_argument_hex(char format, va_list ap)
+int	ft_putchar(char c)
 {
-	unsigned int u;
-
-	if (format == 'x' || format == 'X')
-	{
-		u = va_arg(ap, unsigned int);
-		ft_puthex(u, format == 'x' ? "0123456789abcdef" : "0123456789ABCDEF");
-	}
-	else if (format == '%')
-		ft_putchar('%');
+	return (write(1, &c, 1));
 }
 
-void	print_argument_ext(char format, va_list ap)
+int	ft_strlen(const char *s)
 {
-	char *s;
-	void *p;
-	unsigned int u;
+	int	i;
 
-	if (format == 's')
+	i = 0;
+	while (s[i] != '\0')
+		i++;
+	return (i);
+}
+
+////////////////////////////////////////////
+int	ft_string(char const *str)
+{
+if (!str)
+	return (write (1, "(null)", ft_strlen("(null)")));
+return (write (1, str, ft_strlen(str)));
+}
+
+///////////////////////////////////////////
+
+int	ft_base(size_t n, char *base)
+{
+	size_t	len;
+
+	len = 1;
+	if (n >= (size_t)ft_strlen(base))
 	{
-		s = va_arg(ap, char *);
-		ft_putstr(s);
-	}
-	else if (format == 'p')
-	{
-		p = va_arg(ap, void *);
-		ft_putstr_p(p);
-	}
-	else if (format == 'u')
-	{
-		u = va_arg(ap, unsigned int);
-		ft_putnbr_u(u);
+		len += ft_base(n / ft_strlen(base), base);
+		ft_putchar(base[n % ft_strlen(base)]);
 	}
 	else
-		print_argument_hex(format, ap);
+		ft_putchar(base[n]);
+	return (len);
 }
 
-void	print_argument(char format, va_list ap)
+int ft_number(int n, char menu)
 {
-	int d;
-	char c; 
+	char	*base_x;//hexadecimal minusculas
+	char	*base_X;//hexadecimal mayusculas
+	char	*base_diu;//decimales
 
-	if (format == ' ')
+	base_x = "0123456789abcdef";
+	base_X = "0123456789ABCDEF";
+	base_diu = "0123456789";
+	if (menu == 'd' || menu == 'i')
 	{
-		d = va_arg(ap, int);
-		ft_putnbr_space(d);
+		if (n == -2147483648)
+			return (write(1, "-2147483648", 11));
+		else if (n < 0)
+			return (ft_putchar('-') + ft_base(n * -1, base_diu));
 	}
-	else if (format == 'd')
-	{
-		d = va_arg(ap, int);
-		ft_putnbr(d);
-	}
-	else if (format == 'c')
-	{
-		c = (char)va_arg(ap, int);
-		ft_putchar(c);
-	}
+	else if (menu == 'u')
+		return (ft_base((size_t)n, base_diu));
+	else if (menu == 'x')
+		return (ft_base((size_t)n, base_x));
+	else if (menu == 'X')
+		return (ft_base((size_t)n, base_X));
+	return (1);
+}
+
+///////////////////////////////////////////
+
+int	ft_pointer(void *p)//yo lo hab'ia llamado ft_pointer en la principal
+{
+	size_t p_num;
+
+	p_num = (size_t)p;
+	return (write(1, "0x", 2) + ft_base(p_num, "0123456789abcdef"));
+}
+
+///////////////////////////////////////////
+
+int	ft_menu(va_list x, const char *c)
+{
+//d i x X u -> me los cargo porque puedo agruparlos por base
+	if (*c == 'c')
+		return (ft_putchar(va_arg(x, int)));
+	else if (*c == '%')
+		return (ft_putchar('%'));
+	else if (*c == 's')
+		return (ft_string(va_arg(x, char const *)));/////NOT DONE YET	
+	else if (*c == 'p')
+		return (ft_pointer(va_arg(x, void *)));////NOT DONE YET
 	else
-		print_argument_ext(format, ap);
+		return (ft_number(va_arg(x, int), *c));/////To be done yet
+	return (0);
 }
 
-void	ft_printf(const char *format, ...)
+int	ft_printf(char const *s, ...)
 {
-	va_list ap;
+	va_list x;//x contiene la lista de argumentos
+	int		count;
 
-	va_start(ap, format);
-	while (*format)
+	va_start (x, s);//s es la cabeza de esa lista de argumentos
+	count = 0;
+	while (*s)
 	{
-		if (*format == '%')
-		{
-			format++;
-			print_argument(*format, ap);
-		}
+		if (*s == '%')
+			count += ft_menu(x, ++s);
 		else
-			ft_putchar(*format);
-		format++;
+			count += ft_putchar(*s);
+		s++;
 	}
-	va_end(ap);
+	va_end (x);
+	return (count);
 }
