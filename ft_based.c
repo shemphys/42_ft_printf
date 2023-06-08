@@ -1,5 +1,5 @@
 
-#include "libft.h"
+#include "ft_printf.h"
 
 int	ft_base(size_t n, char *base)
 {
@@ -16,6 +16,7 @@ int	ft_base(size_t n, char *base)
 	return (len);
 }
 
+//may error at if n bigger than int -> size_t n??
 int ft_number(int n, char menu)
 {
 	char	*base_x;//hexadecimal minusculas
@@ -48,5 +49,5 @@ int	ft_pointer(void *p)
 	p_num = (size_t)p;
 	return (write(1, "0x", 2) + ft_base(p_num, "0123456789abcdef"));
 }
-//podria tener errores si el puntero es mas grande que un int
-//posible solucion: ft_number(size_t n, char menu); en vez de el int n que tiene ahora
+
+

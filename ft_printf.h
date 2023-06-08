@@ -11,7 +11,7 @@ int	ft_base(size_t n, char *base);
 int	ft_number(int n, char menu);
 int ft_pointer(void *p);
 
-int	ft_menu(va_list x, const char *c)
-int	ft_printf(char const *s, ...)
+int	ft_menu(va_list x, const char *c);
+int	ft_printf(char const *s, ...);
 
 #endif

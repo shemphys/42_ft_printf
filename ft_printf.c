@@ -1,4 +1,4 @@
-#include "printf.h"
+#include "ft_printf.h"
 
 int	ft_putchar(char c)
 {
@@ -29,12 +29,11 @@ int	ft_menu(va_list x, const char *c)
 	else if (*c == '%')
 		return (ft_putchar('%'));
 	else if (*c == 's')
-		return (ft_string(va_arg(x, char const *)));	
+		return (ft_string(va_arg(x, char const *)));
 	else if (*c == 'p')
 		return (ft_pointer(va_arg(x, void *)));
 	else
 		return (ft_number(va_arg(x, int), *c));
-	return (0);
 }
 
 int	ft_printf(char const *s, ...)
